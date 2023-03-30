@@ -10,7 +10,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DataContext>(options => { options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")); });
+builder.Services.AddDbContext<DataContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

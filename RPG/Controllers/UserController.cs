@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using RPG.Interfaces;
 using RPG.Types;
 using RPG.Models;
-using System.Net;
 
 namespace RPG.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class UserController {
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase {
         
         public UserController(IUserRepository userRepository) {
             _userRepository = userRepository;
@@ -23,8 +23,17 @@ namespace RPG.Controllers
 
         [HttpPost]
         [Route("login")]
-        public void login([FromBody] LoginRequest loginRequest) {
-
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(401, Type = typeof(string))]
+        public IActionResult login([FromBody] LoginRequest loginRequest) {
+            Console.WriteLine("User login request for: " + loginRequest.username);
+            if(_userRepository.authenticateUser(loginRequest.username, loginRequest.password)) {
+                Console.WriteLine("Accepted!");
+                return Ok(loginRequest.username);
+            } else {
+                Console.WriteLine("Rejected!");
+                return Unauthorized("Invalid username or password!");
+            }
         }
 
         private readonly IUserRepository _userRepository;

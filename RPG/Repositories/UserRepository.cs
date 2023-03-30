@@ -1,4 +1,7 @@
-﻿using RPG.Data;
+﻿using BCrypt.Net;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Mvc;
+using RPG.Data;
 using RPG.Interfaces;
 using RPG.Models;
 using System.Net;
@@ -9,10 +12,6 @@ namespace RPG.Repositories
     public class UserRepository : IUserRepository {
         public UserRepository(DataContext context) {
             _context = context;
-        }
-
-        public ICollection<User> getUsers() {
-            return _context.Users.ToList();
         }
 
         public async Task<HttpStatusCode> addUser(User newUser) {
@@ -27,6 +26,11 @@ namespace RPG.Repositories
             }
         }
 
+        public bool authenticateUser(string username, string password) {
+            var asd = _context.Users.Where(e => e.username == username).FirstOrDefault();
+            Console.WriteLine("Contesting password: " + asd.password);
+            return BCrypt.Net.BCrypt.Verify(password, asd.password);
+        }
 
         private readonly DataContext _context;
     }
