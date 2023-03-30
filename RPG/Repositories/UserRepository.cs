@@ -17,13 +17,12 @@ namespace RPG.Repositories
 
         public async Task<HttpStatusCode> addUser(User newUser) {
             if (Regex.IsMatch(newUser.username, "([a-zA-Z0-9]{3,19})") && Regex.IsMatch(newUser.password, "([a-zA-Z0-9]{7,19})")) {
-                _context.Users.Add(newUser);
+                User registeringUser = newUser;
+                registeringUser.password = BCrypt.Net.BCrypt.HashPassword(newUser.password, workFactor: 13);
+                _context.Users.Add(registeringUser);
                 await _context.SaveChangesAsync();
                 return HttpStatusCode.Created;
             } else {
-                Console.WriteLine(newUser.username);
-                Console.WriteLine(newUser.password);
-                Console.WriteLine("-----------------------------------");
                 return HttpStatusCode.NotAcceptable;
             }
         }
