@@ -39,6 +39,34 @@ namespace RPG.Utils
             }
         }
 
+        public actionResponseDTO rotateEncounter(playerActionDTO playerAction) {
+            if (!validActions.Contains(playerAction.actionUsed)) {
+                throw new Exception("Invalid Action!");
+            } else if(_encounters.ContainsKey(playerAction.encounterHash)) {
+                DungeonEncounter processedEncounter = _encounters.GetValueOrDefault(playerAction.encounterHash);
+                if (processedEncounter != null) {
+                    switch(playerAction.actionUsed) {
+                        case "basicAttack":
+                            processedEncounter.HP -= 3;
+                            if (processedEncounter.HP <= 0) {
+                                _encounters.Remove(playerAction.encounterHash);
+                                return new actionResponseDTO(playerAction.encounterHash, 0, true);
+                            } else {
+                                return new actionResponseDTO(playerAction.encounterHash, processedEncounter.HP, false);
+                            }
+                        case "guard":
+                            return new actionResponseDTO(playerAction.encounterHash, processedEncounter.HP, false);
+                        default:
+                            throw new Exception("An interesting error");
+                    }
+                } else {
+                    throw new Exception("Internal error occured! Valid hash, but no encounter pair!");
+                }
+            } else {
+                throw new Exception("Invalid encounter hash!");
+            }
+        }
+
         private int _ID = 0;
         private Dictionary<string, DungeonEncounter> _encounters = new Dictionary<string, DungeonEncounter>();
 
@@ -47,6 +75,8 @@ namespace RPG.Utils
             new DungeonEncounter("Skeelton", 15),
             new DungeonEncounter("Zombie", 20)
         };
+
+        private string[] validActions = { "basicAttack", "guard" };
 
         private DungeonEncounter generateEncounter() {
             Random random = new Random();
