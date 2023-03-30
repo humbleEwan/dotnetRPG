@@ -1,8 +1,8 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RPG.Interfaces;
 using RPG.Types;
 using RPG.Models;
+using System.Net;
 
 namespace RPG.Controllers
 {
@@ -16,24 +16,26 @@ namespace RPG.Controllers
 
         [HttpPost]
         [Route("register")]
-        public HttpStatusCode registerUser([FromBody] User newUser) {
-            _userRepository.addUser(newUser);
-            return HttpStatusCode.Created;
+        [ProducesResponseType(201, Type = typeof(string))]
+        [ProducesResponseType(304, Type = typeof(string))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        public async Task<IActionResult> registerUser([FromBody] User newUser) {
+            HttpStatusCode status = await _userRepository.addUser(newUser);
+            switch(status) {
+                case HttpStatusCode.OK: return Ok(newUser.username);
+                case HttpStatusCode.NotModified: return BadRequest("Username already taken!");
+                case HttpStatusCode.NotAcceptable: return BadRequest("Username or password does not match the criteria!");
+                default: return BadRequest("Something went wrong!");
+            }
         }
 
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(200, Type = typeof(string))]
         [ProducesResponseType(401, Type = typeof(string))]
-        public IActionResult login([FromBody] LoginRequest loginRequest) {
-            Console.WriteLine("User login request for: " + loginRequest.username);
-            if(_userRepository.authenticateUser(loginRequest.username, loginRequest.password)) {
-                Console.WriteLine("Accepted!");
-                return Ok(loginRequest.username);
-            } else {
-                Console.WriteLine("Rejected!");
-                return Unauthorized("Invalid username or password!");
-            }
+        public async Task<IActionResult> login([FromBody] LoginRequest loginRequest) {
+            var success = await _userRepository.authenticateUser(loginRequest.username, loginRequest.password);
+            return success ? Ok(loginRequest.username) : BadRequest("Invalid username or password!");
         }
 
         private readonly IUserRepository _userRepository;

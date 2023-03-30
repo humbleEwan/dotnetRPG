@@ -5,14 +5,8 @@ using RPG.Utils;
 namespace RPG.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DungeonController : ControllerBase {
-
-        [HttpGet]
-        public IEnumerable<string> Get() {
-            string[] a = { "spider" };
-            return a;
-        }
 
         [HttpGet]
         [Route("rollEncounter")]
