@@ -12,8 +12,11 @@ export class DungeonComponent {
   public enemyHP: string = "__NONE__";
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
-    http.get<IEncounter>(baseUrl + 'dungeon/rollEncounter').subscribe(result => {
-      console.log(result);
+    this.rollNewEncounter();
+  }
+
+  rollNewEncounter() {
+    this.http.get<IEncounter>(this.baseUrl + 'dungeon/rollEncounter').subscribe(result => {
       this.enemyName = result.enemyName;
       this.encounterHash = result.hash;
       this.enemyHP = result.hp.toString();
@@ -24,8 +27,12 @@ export class DungeonComponent {
     console.log('Player used basic attack!');
     const data = { actionUsed: 'basicAttack', encounterHash: this.encounterHash };
     console.log(data);
-    this.http.post<any>(this.baseUrl + 'dungeon/rotateEncounter', data).subscribe(result => {
-      console.log(result);
+    this.http.post<IActionresponse>(this.baseUrl + 'dungeon/rotateEncounter', data).subscribe(result => {
+      if (result.finished == true) {
+        this.rollNewEncounter();
+      } else {
+        this.enemyHP = result.remainingHp.toString();
+      }
     });
   }
 
@@ -46,6 +53,12 @@ interface IEncounter { //should be in a separate file
 }
 
 interface IAction {
-  abilityUsed: string
-  encounterHash: string
+  abilityUsed: string;
+  encounterHash: string;
+}
+
+interface IActionresponse {
+  hash: string;
+  remainingHp: number;
+  finished: boolean;
 }

@@ -1,4 +1,5 @@
 ﻿using RPG.DTOs;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -70,18 +71,22 @@ namespace RPG.Utils
         private int _ID = 0;
         private Dictionary<string, DungeonEncounter> _encounters = new Dictionary<string, DungeonEncounter>();
 
-        private DungeonEncounter[] possibleEncounters = { //should be in a Json somewhere
-            new DungeonEncounter("Spider", 10),
-            new DungeonEncounter("Skeelton", 15),
-            new DungeonEncounter("Zombie", 20)
-        };
-
         private string[] validActions = { "basicAttack", "guard" };
 
         private DungeonEncounter generateEncounter() {
             Random random = new Random();
-            int start2 = random.Next(0, possibleEncounters.Length);
-            return possibleEncounters[start2];
+            int rand = random.Next(0, 3);
+            Console.WriteLine(rand);
+            switch(rand) {
+                case 0:
+                    return new DungeonEncounter("Spider", 10);
+                case 1:
+                    return new DungeonEncounter("Skeleton", 15);
+                case 2:
+                    return new DungeonEncounter("Zombie", 20);
+                default:
+                    return new DungeonEncounter("__DEFAULT__", 100000);
+            }
         }
     }
 }
