@@ -16,18 +16,18 @@ namespace RPG.Controllers
 
         [HttpGet]
         [Route("rollEncounter")]
-        public encounterDTO rollEncounter() {
+        public EncounterDTO rollEncounter() {
             return EncounterManager.Instance.rollNewEncounter();
         }
 
         [HttpPost]
         [Route("rotateEncounter")]
-        public actionResponseDTO rotateEncounter([FromBody] playerActionDTO playerAction) {
+        public ActionResponseDTO rotateEncounter([FromBody] PlayerActionDTO playerAction) {
             try {
                 return EncounterManager.Instance.rotateEncounter(playerAction);
             } catch(Exception e) { 
                 Console.WriteLine(e);
-                return new actionResponseDTO("invalid", 10, false);
+                return new ActionResponseDTO("invalid", 10, false);
             }
         }
     }

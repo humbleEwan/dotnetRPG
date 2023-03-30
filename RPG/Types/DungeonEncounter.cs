@@ -1,7 +1,9 @@
-﻿namespace RPG
+﻿namespace RPG.Types
 {
-    public class DungeonEncounter {
-        public DungeonEncounter(string enemyName, int HP) {
+    public class DungeonEncounter
+    {
+        public DungeonEncounter(string enemyName, int HP)
+        {
             this.enemyName = enemyName;
             this.HP = HP;
         }

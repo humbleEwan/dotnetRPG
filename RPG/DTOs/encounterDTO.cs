@@ -1,7 +1,7 @@
 ﻿namespace RPG.DTOs
 {
-    public class encounterDTO {
-        public encounterDTO(string hash, string enemyName, int HP) {
+    public class EncounterDTO {
+        public EncounterDTO(string hash, string enemyName, int HP) {
             this.hash = hash;
             this.enemyName = enemyName;
             this.HP = HP;

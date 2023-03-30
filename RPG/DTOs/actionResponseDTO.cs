@@ -1,7 +1,7 @@
 ﻿namespace RPG.DTOs
 {
-    public class actionResponseDTO {
-        public actionResponseDTO(string encounterHash, int remainingHp, bool finished = false) {
+    public class ActionResponseDTO {
+        public ActionResponseDTO(string encounterHash, int remainingHp, bool finished = false) {
             this.encounterHash = encounterHash;
             this.remainingHp = remainingHp;
             this.finished = finished;

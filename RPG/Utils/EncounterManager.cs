@@ -1,4 +1,5 @@
 ﻿using RPG.DTOs;
+using RPG.Types;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,7 +20,7 @@ namespace RPG.Utils
             } 
         }
 
-        public encounterDTO rollNewEncounter() {
+        public EncounterDTO rollNewEncounter() {
             using (SHA256 sha256Hash = SHA256.Create()) {
                 byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(_ID.ToString() + "secureSalt")); //needs some form of 'dotenv'
                 StringBuilder sb = new StringBuilder();
@@ -36,11 +37,11 @@ namespace RPG.Utils
                 }
                 Console.WriteLine("----------------------------------------------------------------------------------"); //haha, I left a funny
 
-                return new encounterDTO(sb.ToString(), de.enemyName, de.HP);
+                return new EncounterDTO(sb.ToString(), de.enemyName, de.HP);
             }
         }
 
-        public actionResponseDTO rotateEncounter(playerActionDTO playerAction) {
+        public ActionResponseDTO rotateEncounter(PlayerActionDTO playerAction) {
             if (!validActions.Contains(playerAction.actionUsed)) {
                 throw new Exception("Invalid Action!");
             } else if(_encounters.ContainsKey(playerAction.encounterHash)) {
@@ -51,12 +52,12 @@ namespace RPG.Utils
                             processedEncounter.HP -= 3;
                             if (processedEncounter.HP <= 0) {
                                 _encounters.Remove(playerAction.encounterHash);
-                                return new actionResponseDTO(playerAction.encounterHash, 0, true);
+                                return new ActionResponseDTO(playerAction.encounterHash, 0, true);
                             } else {
-                                return new actionResponseDTO(playerAction.encounterHash, processedEncounter.HP, false);
+                                return new ActionResponseDTO(playerAction.encounterHash, processedEncounter.HP, false);
                             }
                         case "guard":
-                            return new actionResponseDTO(playerAction.encounterHash, processedEncounter.HP, false);
+                            return new ActionResponseDTO(playerAction.encounterHash, processedEncounter.HP, false);
                         default:
                             throw new Exception("An interesting error");
                     }
