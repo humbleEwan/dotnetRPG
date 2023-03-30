@@ -7,13 +7,23 @@ import { Component, Inject } from '@angular/core';
 })
 export class DungeonComponent {
 
-  public enemy: string = "__default__";
+  public enemyName: string = "__default__";
+  public encounterHash: string = "__default__";
+  public enemyHP: string = "__NONE__";
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    console.log(baseUrl + 'dungeon');
-    http.get<string>(baseUrl + 'dungeon').subscribe(result => {
+    console.log(baseUrl + 'dungeon/roll');
+    http.get<IEncounter>(baseUrl + 'dungeon/roll').subscribe(result => {
       console.log(result);
-      this.enemy = result;
+      this.enemyName = result.enemyName;
+      this.encounterHash = result.hash;
+      this.enemyHP = result.hp.toString();
     })
   }
+}
+
+interface IEncounter {
+  enemyName: string;
+  hash: string;
+  hp: number;
 }
