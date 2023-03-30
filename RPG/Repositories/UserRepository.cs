@@ -2,6 +2,7 @@
 using RPG.Interfaces;
 using RPG.Models;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace RPG.Repositories
 {
@@ -15,9 +16,16 @@ namespace RPG.Repositories
         }
 
         public async Task<HttpStatusCode> addUser(User newUser) {
-            _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
-            return HttpStatusCode.Created;
+            if (Regex.IsMatch(newUser.username, "([a-zA-Z0-9]{3,19})") && Regex.IsMatch(newUser.password, "([a-zA-Z0-9]{7,19})")) {
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+                return HttpStatusCode.Created;
+            } else {
+                Console.WriteLine(newUser.username);
+                Console.WriteLine(newUser.password);
+                Console.WriteLine("-----------------------------------");
+                return HttpStatusCode.NotAcceptable;
+            }
         }
 
 
