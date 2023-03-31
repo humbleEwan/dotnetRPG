@@ -3,6 +3,7 @@ using RPG.Interfaces;
 using RPG.Types;
 using RPG.Models;
 using System.Net;
+using RPG.Utils;
 
 namespace RPG.Controllers
 {
@@ -17,7 +18,6 @@ namespace RPG.Controllers
         [HttpPost]
         [Route("register")]
         [ProducesResponseType(201, Type = typeof(string))]
-        [ProducesResponseType(304, Type = typeof(string))]
         [ProducesResponseType(400, Type = typeof(string))]
         public async Task<IActionResult> registerUser([FromBody] User newUser) {
             HttpStatusCode status = await _userRepository.addUser(newUser);
@@ -35,7 +35,10 @@ namespace RPG.Controllers
         [ProducesResponseType(401, Type = typeof(string))]
         public async Task<IActionResult> login([FromBody] LoginRequest loginRequest) {
             var success = await _userRepository.authenticateUser(loginRequest.username, loginRequest.password);
-            return success ? Ok(loginRequest.username) : BadRequest("Invalid username or password!");
+            if(success) {
+                Response.Cookies.Append("jwtToken", new JWTokenHandler(loginRequest.username).generateToken());
+            }
+            return success ? Ok(loginRequest.username) : Unauthorized("Invalid username or password!");
         }
 
         private readonly IUserRepository _userRepository;
