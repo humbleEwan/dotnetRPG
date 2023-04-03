@@ -21,15 +21,13 @@ builder.Services.AddAuthentication(options => {
 }).AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = "xDxDxDxDxDxDxDxDxDxDxDxD",
+        ValidAudience = "hahahahahahahahahahahahahaha",
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("very-safe-secret"))
-    };
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context => {
-            context.Token = context.Request.Headers["xDD"];
-            return Task.CompletedTask;
-        }
+        ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("asd-asd-asd-asd-asd"))
     };
 });
 

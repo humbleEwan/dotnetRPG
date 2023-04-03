@@ -36,7 +36,7 @@ namespace RPG.Controllers
         public async Task<IActionResult> login([FromBody] LoginRequest loginRequest) {
             var success = await _userRepository.authenticateUser(loginRequest.username, loginRequest.password);
             if(success) {
-                Response.Cookies.Append("jwtToken", new JWTokenHandler(loginRequest.username).generateToken());
+                Response.Cookies.Append("Authorization", new JWTokenHandler(loginRequest.username).generateToken());
             }
             return success ? Ok(loginRequest.username) : Unauthorized("Invalid username or password!");
         }

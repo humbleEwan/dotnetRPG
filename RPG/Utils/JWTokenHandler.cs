@@ -8,12 +8,14 @@ namespace RPG.Utils
     public class JWTokenHandler {
         public JWTokenHandler(string payload) {
             _tokenHandler = new JwtSecurityTokenHandler();
-            _key = Encoding.ASCII.GetBytes("very-safe-secret");
+            _key = Encoding.ASCII.GetBytes("asd-asd-asd-asd-asd");
             _tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(new[] {
                     new Claim("payload", payload)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
+                Issuer = "xDxDxDxDxDxDxDxDxDxDxDxD",
+                Audience = "hahahahahahahahahahahahahaha",
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256Signature)
             };
         }
