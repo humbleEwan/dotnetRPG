@@ -9,8 +9,12 @@ namespace RPG.Controllers
     public class CharacterController : ControllerBase {
 
         [HttpGet]
-        public string Get() {
-            return "agyverzes";
+        [Route("load")]
+        public string load() {
+
+            //should return the players character or a message that forces the forntend to charactr creation
+
+            return "undefined";
         }
     }
 }
